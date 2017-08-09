@@ -112,7 +112,7 @@ Drf Generators will create ``serializers.py`` for your application. It currently
 Views
 =====
 
-DRF Generators will create ``views.py`` for your application. It can generate ``ViewSet``, ``APIView`` and function based views. Set the ``--format`` option when running the generator to pick the preferred style
+DRF Generators will create ``api.py`` for your application. It can generate ``ViewSet``, ``APIView`` and function based views. Set the ``--format`` option when running the generator to pick the preferred style
 
 -------
 ViewSet

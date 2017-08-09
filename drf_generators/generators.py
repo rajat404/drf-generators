@@ -7,6 +7,7 @@ from drf_generators.templates.apiview import API_URL, API_VIEW
 from drf_generators.templates.viewset import VIEW_SET_URL, VIEW_SET_VIEW
 from drf_generators.templates.function import FUNCTION_URL, FUNCTION_VIEW
 from drf_generators.templates.modelviewset import MODEL_URL, MODEL_VIEW
+from drf_generators.templates.mixinviewset import MIXIN_URL, MIXIN_VIEW
 
 __all__ = ['BaseGenerator', 'APIViewGenerator', 'ViewSetGenerator',
            'FunctionViewGenerator', 'ModelViewSetGenerator']
@@ -33,7 +34,7 @@ class BaseGenerator(object):
 
     def generate_views(self):
         content = self.view_content()
-        filename = 'views.py'
+        filename = 'api.py'
         if self.write_file(content, filename):
             return '  - writing %s' % filename
         else:
@@ -62,7 +63,10 @@ class BaseGenerator(object):
         return self.url_template.render(context)
 
     def get_model_names(self):
-        return [m.__name__ for m in self.app_config.get_models()]
+        # Remove models added by django-simple-history
+        # https://github.com/treyhunner/django-simple-history
+        return [m.__name__ for m in self.app_config.get_models()
+                if not m.__name__.startswith('Historical')]
 
     def get_serializer_names(self):
         return [m + 'Serializer' for m in self.models]
@@ -114,3 +118,11 @@ class ModelViewSetGenerator(BaseGenerator):
         self.view_template = Template(MODEL_VIEW)
         self.url_template = Template(MODEL_URL)
         super(ModelViewSetGenerator, self).__init__(app_config, force)
+
+
+class MixinViewSetGenerator(BaseGenerator):
+
+    def __init__(self, app_config, force):
+        self.view_template = Template(MIXIN_VIEW)
+        self.url_template = Template(MIXIN_URL)
+        super(MixinViewSetGenerator, self).__init__(app_config, force)

@@ -1,5 +1,7 @@
 from django.core.management.base import AppCommand, CommandError
-from drf_generators.generators import *
+from drf_generators.generators import (
+    APIViewGenerator, ViewSetGenerator, FunctionViewGenerator,
+    ModelViewSetGenerator, MixinViewSetGenerator)
 import django
 
 
@@ -63,9 +65,11 @@ class Command(AppCommand):
             generator = FunctionViewGenerator(app_config, force)
         elif format == 'modelviewset':
             generator = ModelViewSetGenerator(app_config, force)
+        elif format == 'mixinviewset':
+            generator = MixinViewSetGenerator(app_config, force)
         else:
             message = '\'%s\' is not a valid format. ' % options['format']
-            message += '(viewset, modelviewset, apiview, function)'
+            message += '(viewset, modelviewset, mixinviewset, apiview, function)'
             raise CommandError(message)
 
         if serializers:
